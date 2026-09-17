@@ -12,7 +12,7 @@ internal sealed class ConfigWindow : Window, IDisposable
         : base("Who Pulled Configuration")
     {
         this.configuration = configuration;
-        this.Size = new System.Numerics.Vector2(280, 150);
+        this.Size = new System.Numerics.Vector2(460, 300);
     }
 
     public void Dispose()
@@ -41,5 +41,25 @@ internal sealed class ConfigWindow : Window, IDisposable
             this.configuration.TrackSRanks = trackSRanks;
             this.configuration.Save();
         }
+
+        ImGui.Separator();
+        ImGui.Text("Output format");
+        var outputFormat = this.configuration.OutputFormat;
+        if (ImGui.InputText("##output-format", ref outputFormat, 512))
+        {
+            this.configuration.OutputFormat = outputFormat;
+            this.configuration.Save();
+        }
+
+        var defaultColorKey = (int)this.configuration.DefaultColorKey;
+        if (ImGui.InputInt("Default color key", ref defaultColorKey))
+        {
+            this.configuration.DefaultColorKey = (ushort)Math.Clamp(defaultColorKey, 0, ushort.MaxValue);
+            this.configuration.Save();
+        }
+
+        ImGui.TextWrapped("Placeholders: {Player}, {Target}, {Rank}. Leave the default color key at 0 for normal chat colors.");
+        ImGui.TextWrapped("Colors: {color:500}colored text{/color}. Color keys are FFXIV UI color IDs; 500 is the standard Dalamud gold used by plugin messages.");
+        ImGui.TextWrapped("Unknown pullers use Player = Unknown player. Color tags can be placed anywhere in the format.");
     }
 }

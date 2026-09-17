@@ -11,6 +11,8 @@ public sealed class Configuration : IPluginConfiguration
     public bool TrackBRanks { get; set; } = true;
     public bool TrackARanks { get; set; } = true;
     public bool TrackSRanks { get; set; } = true;
+    public string OutputFormat { get; set; } = "[Who Pulled] {Player} pulled {Target}.";
+    public ushort DefaultColorKey { get; set; }
 
     public void Save()
     {

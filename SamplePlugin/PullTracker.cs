@@ -63,7 +63,7 @@ internal sealed class PullTracker : IDisposable
         }
 
         var now = DateTime.UtcNow;
-        this.candidate = new Candidate(battleNpc!.GameObjectId, source.Name.ToString(), target.Name.ToString(), now, now.AddSeconds(10));
+        this.candidate = new Candidate(battleNpc!.GameObjectId, source.Name.ToString(), target.Name.ToString(), this.GetRankLabel(battleNpc), now, now.AddSeconds(10));
     }
 
     private void OnUpdate(IFramework _)
@@ -116,7 +116,7 @@ internal sealed class PullTracker : IDisposable
 
     private void Announce(Candidate candidate)
     {
-        this.chatGui.Print($"[Who Pulled] {candidate.PlayerName} pulled {candidate.TargetName}.");
+        this.chatGui.Print(OutputFormatter.Format(this.configuration, candidate.PlayerName, candidate.TargetName, candidate.Rank));
         this.log.Information("{Player} pulled {Target}.", candidate.PlayerName, candidate.TargetName);
         this.announcedTargets.Add(candidate.TargetId);
         this.Reset();
@@ -128,7 +128,7 @@ internal sealed class PullTracker : IDisposable
             ? $" targeting {player.Name}"
             : string.Empty;
 
-        this.chatGui.Print($"[Who Pulled] {battleNpc.Name} entered combat{target}, but the puller was not visible to your client.");
+        this.chatGui.Print(OutputFormatter.Format(this.configuration, "Unknown player", battleNpc.Name.ToString(), this.GetRankLabel(battleNpc)));
         this.log.Information("{Target} entered combat, but the puller was not visible to the client.", battleNpc.Name);
         this.announcedTargets.Add(battleNpc.GameObjectId);
     }
@@ -145,12 +145,12 @@ internal sealed class PullTracker : IDisposable
 
     private bool IsEnabledRank(IBattleNpc battleNpc)
     {
-        if (!this.dataManager.GetExcelSheet<BNpcBase>().TryGetRow(battleNpc.BaseId, out var data))
+        if (!this.TryGetRank(battleNpc, out var rank))
         {
             return false;
         }
 
-        return data.Rank switch
+        return rank switch
         {
             1 => this.configuration.TrackBRanks,
             2 => this.configuration.TrackARanks,
@@ -159,10 +159,31 @@ internal sealed class PullTracker : IDisposable
         };
     }
 
+    private string GetRankLabel(IBattleNpc battleNpc)
+        => this.TryGetRank(battleNpc, out var rank) ? rank switch
+        {
+            1 => "B",
+            2 => "A",
+            3 => "S",
+            _ => "Unknown",
+        } : "Unknown";
+
+    private bool TryGetRank(IBattleNpc battleNpc, out byte rank)
+    {
+        if (this.dataManager.GetExcelSheet<BNpcBase>().TryGetRow(battleNpc.BaseId, out var data))
+        {
+            rank = data.Rank;
+            return true;
+        }
+
+        rank = 0;
+        return false;
+    }
+
     private void Reset()
     {
         this.candidate = null;
     }
 
-    private sealed record Candidate(ulong TargetId, string PlayerName, string TargetName, DateTime CreatedAt, DateTime ExpiresAt);
+    private sealed record Candidate(ulong TargetId, string PlayerName, string TargetName, string Rank, DateTime CreatedAt, DateTime ExpiresAt);
 }
