@@ -41,8 +41,8 @@ jobs:
       - name: Publish latest release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: WhoPulled latest
+          tag_name: ${{ github.ref_name }}
+          name: WhoPulled ${{ github.ref_name }}
           prerelease: true
           files: WhoPulled.zip
           make_latest: false
