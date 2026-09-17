@@ -70,16 +70,28 @@ internal sealed class PullTracker : IDisposable
         foreach (var battleNpc in this.objectTable.OfType<IBattleNpc>())
         {
             var isInCombat = battleNpc.StatusFlags.HasFlag(StatusFlags.InCombat);
-            var wasInCombat = this.combatStates.GetValueOrDefault(battleNpc.GameObjectId);
+            if (!this.combatStates.TryGetValue(battleNpc.GameObjectId, out var wasInCombat))
+            {
+                this.combatStates[battleNpc.GameObjectId] = isInCombat;
+                continue;
+            }
+
             this.combatStates[battleNpc.GameObjectId] = isInCombat;
 
+            if (wasInCombat || !isInCombat || !this.IsEnabledRank(battleNpc))
+            {
+                continue;
+            }
+
             if (this.candidate is { } pending && pending.TargetId == battleNpc.GameObjectId &&
-                isInCombat && battleNpc.TargetObject is IPlayerCharacter target &&
-                target.Name.ToString() == pending.PlayerName &&
-                (!wasInCombat || DateTime.UtcNow - pending.CreatedAt <= TimeSpan.FromSeconds(2)))
+                battleNpc.TargetObject is IPlayerCharacter target &&
+                target.Name.ToString() == pending.PlayerName)
             {
                 this.Announce(pending);
+                continue;
             }
+
+            this.AnnounceUnknown(battleNpc);
         }
 
         if (this.candidate is not { } candidate)
@@ -100,6 +112,16 @@ internal sealed class PullTracker : IDisposable
         this.chatGui.Print($"[Who Pulled] {candidate.PlayerName} pulled {candidate.TargetName}.");
         this.log.Information("{Player} pulled {Target}.", candidate.PlayerName, candidate.TargetName);
         this.Reset();
+    }
+
+    private void AnnounceUnknown(IBattleNpc battleNpc)
+    {
+        var target = battleNpc.TargetObject is IPlayerCharacter player
+            ? $" targeting {player.Name}"
+            : string.Empty;
+
+        this.chatGui.Print($"[Who Pulled] {battleNpc.Name} entered combat{target}, but the puller was not visible to your client.");
+        this.log.Information("{Target} entered combat, but the puller was not visible to the client.", battleNpc.Name);
     }
 
     private bool TryFindBattleNpc(string name, out IBattleNpc? battleNpc)
