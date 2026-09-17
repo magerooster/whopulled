@@ -19,6 +19,7 @@ internal sealed class PullTracker : IDisposable
     private readonly Configuration configuration;
     private readonly IPluginLog log;
     private readonly Dictionary<ulong, bool> combatStates = [];
+    private readonly HashSet<ulong> announcedTargets = [];
 
     private Candidate? candidate;
 
@@ -78,12 +79,18 @@ internal sealed class PullTracker : IDisposable
 
             this.combatStates[battleNpc.GameObjectId] = isInCombat;
 
+            if (!isInCombat)
+            {
+                this.announcedTargets.Remove(battleNpc.GameObjectId);
+            }
+
             if (wasInCombat || !isInCombat || !this.IsEnabledRank(battleNpc))
             {
                 continue;
             }
 
             if (this.candidate is { } pending && pending.TargetId == battleNpc.GameObjectId &&
+                !this.announcedTargets.Contains(battleNpc.GameObjectId) &&
                 battleNpc.TargetObject is IPlayerCharacter target &&
                 target.Name.ToString() == pending.PlayerName)
             {
@@ -111,6 +118,7 @@ internal sealed class PullTracker : IDisposable
     {
         this.chatGui.Print($"[Who Pulled] {candidate.PlayerName} pulled {candidate.TargetName}.");
         this.log.Information("{Player} pulled {Target}.", candidate.PlayerName, candidate.TargetName);
+        this.announcedTargets.Add(candidate.TargetId);
         this.Reset();
     }
 
@@ -122,6 +130,7 @@ internal sealed class PullTracker : IDisposable
 
         this.chatGui.Print($"[Who Pulled] {battleNpc.Name} entered combat{target}, but the puller was not visible to your client.");
         this.log.Information("{Target} entered combat, but the puller was not visible to the client.", battleNpc.Name);
+        this.announcedTargets.Add(battleNpc.GameObjectId);
     }
 
     private bool TryFindBattleNpc(string name, out IBattleNpc? battleNpc)
