@@ -1,46 +1,8 @@
-> ⚠️ **Don't click Fork!**
-> 
-> This is a GitHub Template repo. If you want to use this for a plugin, [use this template][new-repo] to make a new repo!
->
 # WhoPulled
 
-[![Use This Template badge](https://img.shields.io/badge/Use%20This%20Template-0?logo=github&labelColor=grey)][new-repo]
-
-
-Simple example plugin for Dalamud.
-
-This is not designed to be the simplest possible example, but it is also not designed to cover everything you might want to do. For more detailed questions, come ask in [the Discord](https://discord.gg/holdshift).
-
-## Main Points
-
-* Simple functional plugin
-  * Slash command
-  * Main UI
-  * Settings UI
-  * Image loading
-  * Plugin json
-* Simple, slightly-improved plugin configuration handling
-* Project organization
-  * Copies all necessary plugin files to the output directory
-    * Does not copy dependencies that are provided by dalamud
-    * Output directory can be zipped directly and have exactly what is required
-  * Hides data files from visual studio to reduce clutter
-    * Also allows having data files in different paths than VS would usually allow if done in the IDE directly
-
-
-The intention is less that any of this is used directly in other projects, and more to show how similar things can be done.
+WhoPulled identifies the player who first engages a configured overworld hunt and reports the result in chat. B, A, and S ranks can be enabled or disabled in the plugin configuration window.
 
 ## How To Use
-
-### Getting Started
-
-To begin, [clone this template repository][new-repo] to your own GitHub account. This will automatically bring in everything you need to get a jumpstart on development. You do not need to fork this repository unless you intend to contribute modifications to it.
-
-Be sure to also check out the [Dalamud Developer Docs][dalamud-docs] for helpful information about building your own plugin. The Developer Docs includes helpful information about all sorts of things, including [how to submit][submit] your newly-created plugin to the official repository. Assuming you use this template repository, the provided project build configuration and license are already chosen to make everything a breeze.
-
-[new-repo]: https://github.com/new?template_name=SamplePlugin&template_owner=goatcorp
-[dalamud-docs]: https://dalamud.dev
-[submit]: https://dalamud.dev/plugin-publishing/submission
 
 ### Prerequisites
 
@@ -59,16 +21,25 @@ WhoPulled assumes all the following prerequisites are met:
 
 ### Activating in-game
 
-1. Launch the game and use `/xlsettings` in chat or `xlsettings` in the Dalamud Console to open up the Dalamud settings.
-    * In here, go to `Experimental`, and add the full path to the `WhoPulled.dll` to the list of Dev Plugin Locations.
-2. Next, use `/xlplugins` (chat) or `xlplugins` (console) to open up the Plugin Installer.
-    * In here, go to `Dev Tools > Installed Dev Plugins`, and `WhoPulled` should be visible. Enable it.
-3. You should now be able to use `/pmycommand` (chat) or `pmycommand` (console)!
+#### Local development
 
-Note that you only need to add it to the Dev Plugin Locations once (Step 1); it is preserved afterwards. You can disable, enable, or load your plugin on startup through the Plugin Installer.
+1. Build the project in Debug or Release mode.
+2. Open `/xlsettings` and go to `Experimental`.
+3. Add the full path to `SamplePlugin/bin/x64/Debug` under `Dev Plugin Locations`.
+4. Open `/xlplugins`, then enable `WhoPulled` under `Dev Tools > Installed Dev Plugins`.
 
-### Reconfiguring for your own uses
+#### Custom repository
+
+1. Open `/xlsettings` and go to `Experimental`.
+2. Add this URL under `Custom Plugin Repositories`:
+
+   `https://raw.githubusercontent.com/magerooster/whopulled/main/pluginmaster.json`
+
+3. Open `/xlplugins` and refresh the plugin repositories.
+4. Search for `WhoPulled` and select `Install` or `Update`.
+
+After a new release, refresh the repositories before checking for updates.
+
+### Plugin metadata
 
 Dalamud loads `WhoPulled.json` next to the DLL and uses it for plugin metadata.
-
-All participation in this repository is governed by our [Code of Conduct](https://dalamud.dev/code-of-conduct). If you used AI tooling at any point, review the [AI Usage Policy](https://dalamud.dev/plugin-publishing/ai-policy) and disclose your level of AI use. Entirely AI-generated submissions will be rejected, and undisclosed AI use may result in a ban.
