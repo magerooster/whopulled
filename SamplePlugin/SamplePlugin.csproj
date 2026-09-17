@@ -5,11 +5,11 @@
     <RootNamespace>WhoPulled</RootNamespace>
     <Version>0.0.0.1</Version>
     <!-- Manifest fields (see https://github.com/goatcorp/DalamudPackager/blob/827d88dc/DalamudPackager/DalamudPackager.cs#L420) -->
-    <Author>Jon Bangsberg</Author>
+    <Author>MageRooster</Author>
     <Name>WhoPulled</Name>
     <Punchline>Shows who pulled the overworld hunt.</Punchline>
     <Description>Identifies the player who first engaged an overworld hunt, including players outside your party.</Description>
-    <RepoUrl>https://github.com/jonbangsberg/ffxiv-who-pulled</RepoUrl>
+    <RepoUrl>https://github.com/magerooster/whopulled</RepoUrl>
     <Tags>hunt;pull;combat;utility</Tags>
   </PropertyGroup>
 
