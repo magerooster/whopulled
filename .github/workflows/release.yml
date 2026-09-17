@@ -1,0 +1,48 @@
+name: Publish WhoPulled
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-2022
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Download Dalamud
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/latest.zip -OutFile latest.zip
+          Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
+
+      - name: Build
+        run: dotnet build SamplePlugin/SamplePlugin.csproj --configuration Release
+
+      - name: Package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force package | Out-Null
+          Copy-Item SamplePlugin/bin/x64/Release/WhoPulled.dll package/
+          Copy-Item SamplePlugin/bin/x64/Release/WhoPulled.json package/
+          Copy-Item SamplePlugin/bin/x64/Release/WhoPulled.deps.json package/
+          Compress-Archive -Path package/* -DestinationPath WhoPulled.zip -Force
+
+      - name: Publish latest release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: WhoPulled latest
+          prerelease: true
+          files: WhoPulled.zip
+          make_latest: false

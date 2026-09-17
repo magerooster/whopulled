@@ -1,0 +1,26 @@
+[
+  {
+    "Author": "Jon Bangsberg",
+    "Name": "WhoPulled",
+    "InternalName": "WhoPulled",
+    "AssemblyVersion": "0.0.0.1",
+    "Description": "Identifies the player who first engaged an overworld hunt, including players outside your party.",
+    "RepoUrl": "https://github.com/magerooster/whopulled",
+    "ApplicableVersion": "any",
+    "DalamudApiLevel": 15,
+    "DownloadLinkInstall": "https://github.com/magerooster/whopulled/releases/download/latest/WhoPulled.zip",
+    "DownloadLinkUpdate": "https://github.com/magerooster/whopulled/releases/download/latest/WhoPulled.zip",
+    "LoadRequiredState": 0,
+    "LoadSync": false,
+    "LoadPriority": 0,
+    "CanUnloadAsync": false,
+    "SupportsProfiles": true,
+    "Tags": [
+      "hunt",
+      "pull",
+      "combat",
+      "utility"
+    ],
+    "AcceptsFeedback": true
+  }
+]
