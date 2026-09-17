@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="SamplePlugin/SamplePlugin.csproj" Id="WhoPulled">
+    <Platform Project="x64" />
+  </Project>
+</Solution>
