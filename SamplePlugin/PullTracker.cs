@@ -61,7 +61,8 @@ internal sealed class PullTracker : IDisposable
             return;
         }
 
-        this.candidate = new Candidate(battleNpc!.GameObjectId, source.Name.ToString(), target.Name.ToString(), DateTime.UtcNow.AddSeconds(10));
+        var now = DateTime.UtcNow;
+        this.candidate = new Candidate(battleNpc!.GameObjectId, source.Name.ToString(), target.Name.ToString(), now, now.AddSeconds(10));
     }
 
     private void OnUpdate(IFramework _)
@@ -73,11 +74,11 @@ internal sealed class PullTracker : IDisposable
             this.combatStates[battleNpc.GameObjectId] = isInCombat;
 
             if (this.candidate is { } pending && pending.TargetId == battleNpc.GameObjectId &&
-                !wasInCombat && isInCombat && battleNpc.TargetObject is IPlayerCharacter)
+                isInCombat && battleNpc.TargetObject is IPlayerCharacter target &&
+                target.Name.ToString() == pending.PlayerName &&
+                (!wasInCombat || DateTime.UtcNow - pending.CreatedAt <= TimeSpan.FromSeconds(2)))
             {
-                this.chatGui.Print($"[Who Pulled] {pending.PlayerName} pulled {pending.TargetName}.");
-                this.log.Information("{Player} pulled {Target}.", pending.PlayerName, pending.TargetName);
-                this.Reset();
+                this.Announce(pending);
             }
         }
 
@@ -92,6 +93,12 @@ internal sealed class PullTracker : IDisposable
             return;
         }
 
+    }
+
+    private void Announce(Candidate candidate)
+    {
+        this.chatGui.Print($"[Who Pulled] {candidate.PlayerName} pulled {candidate.TargetName}.");
+        this.log.Information("{Player} pulled {Target}.", candidate.PlayerName, candidate.TargetName);
         this.Reset();
     }
 
@@ -126,5 +133,5 @@ internal sealed class PullTracker : IDisposable
         this.candidate = null;
     }
 
-    private sealed record Candidate(ulong TargetId, string PlayerName, string TargetName, DateTime ExpiresAt);
+    private sealed record Candidate(ulong TargetId, string PlayerName, string TargetName, DateTime CreatedAt, DateTime ExpiresAt);
 }
