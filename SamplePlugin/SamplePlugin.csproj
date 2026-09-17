@@ -10,6 +10,7 @@
     <Punchline>Shows who pulled the overworld hunt.</Punchline>
     <Description>Identifies the player who first engaged an overworld hunt, including players outside your party.</Description>
     <RepoUrl>https://github.com/magerooster/whopulled</RepoUrl>
+    <IconUrl>https://raw.githubusercontent.com/magerooster/whopulled/main/icon.png</IconUrl>
     <Tags>hunt;pull;combat;utility</Tags>
   </PropertyGroup>
 

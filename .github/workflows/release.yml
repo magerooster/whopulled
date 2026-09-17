@@ -27,7 +27,7 @@ jobs:
           Expand-Archive -Force latest.zip "$env:AppData\XIVLauncher\addon\Hooks\dev"
 
       - name: Build
-        run: dotnet build SamplePlugin/SamplePlugin.csproj --configuration Release
+        run: dotnet build SamplePlugin.slnx --configuration Release
 
       - name: Package
         shell: pwsh
