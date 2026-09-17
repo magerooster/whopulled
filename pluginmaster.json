@@ -3,7 +3,7 @@
     "Author": "MageRooster",
     "Name": "WhoPulled",
     "InternalName": "WhoPulled",
-    "AssemblyVersion": "0.0.0.1",
+    "AssemblyVersion": "0.0.0.4",
     "Description": "Identifies the player who first engaged an overworld hunt, including players outside your party.",
     "RepoUrl": "https://github.com/magerooster/whopulled",
     "IconUrl": "https://raw.githubusercontent.com/magerooster/whopulled/main/icon.png",
