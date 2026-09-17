@@ -42,6 +42,13 @@ internal sealed class ConfigWindow : Window, IDisposable
             this.configuration.Save();
         }
 
+        var trackSSRanks = this.configuration.TrackSSRanks;
+        if (ImGui.Checkbox("SS ranks / minions", ref trackSSRanks))
+        {
+            this.configuration.TrackSSRanks = trackSSRanks;
+            this.configuration.Save();
+        }
+
         ImGui.Separator();
         ImGui.Text("Output format");
         var outputFormat = this.configuration.OutputFormat;

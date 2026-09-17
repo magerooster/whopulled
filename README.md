@@ -1,6 +1,6 @@
 # WhoPulled
 
-WhoPulled identifies the player who first engages a configured overworld hunt and reports the result in chat. B, A, and S ranks can be enabled or disabled in the plugin configuration window.
+WhoPulled identifies the player who first engages a configured overworld hunt and reports the result in chat. B, A, S, and SS ranks/minions can be enabled or disabled in the plugin configuration window.
 
 ## How To Use
 

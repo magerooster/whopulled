@@ -155,6 +155,7 @@ internal sealed class PullTracker : IDisposable
             1 => this.configuration.TrackBRanks,
             2 => this.configuration.TrackARanks,
             3 => this.configuration.TrackSRanks,
+            4 => this.configuration.TrackSSRanks,
             _ => false,
         };
     }
@@ -165,6 +166,7 @@ internal sealed class PullTracker : IDisposable
             1 => "B",
             2 => "A",
             3 => "S",
+            4 => "SS",
             _ => "Unknown",
         } : "Unknown";
 
