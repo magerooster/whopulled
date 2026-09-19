@@ -4,7 +4,7 @@
     "Name": "WhoPulled",
     "InternalName": "WhoPulled",
     "AssemblyVersion": "0.0.0.9",
-    "Description": "Identifies the player who first engaged an overworld hunt, including players outside your party.",
+    "Description": "Custom repo: https://raw.githubusercontent.com/magerooster/whopulled/main/pluginmaster.json. AI-assisted code generation was used. Identifies the player who first pulled the hunt, including players outside your party.",
     "RepoUrl": "https://github.com/magerooster/whopulled",
     "IconUrl": "https://raw.githubusercontent.com/magerooster/whopulled/main/icon.png",
     "ApplicableVersion": "any",
